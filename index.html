@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portal de Calculadoras</title>
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Adicionando o CSS direto no head -->
+  <style>
+    .ads-container {
+      position: fixed; /* Fixa o anúncio na tela */
+      top: 120px; /* Fica abaixo do campo de pesquisa */
+      right: 10px; /* 10px de distância da borda direita */
+      z-index: 9999; /* Garante que o anúncio fique acima de outros elementos */
+      width: 300px; /* Tamanho fixo do anúncio */
+      height: 600px; /* Tamanho fixo do anúncio */
+      background-color: #fff; /* Fundo branco para visibilidade */
+      border-radius: 8px; /* Bordas arredondadas para suavizar */
+      padding: 10px; /* Espaçamento interno */
+    }
+
+    .ads-container ins {
+      width: 100%; /* Ocupa 100% da largura do container */
+      height: 100%; /* Ocupa 100% da altura do container */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧮 Portal de Calculadoras</h1>
+    <p>Escolha ou busque a calculadora que você precisa:</p>
+
+    <!-- Container do anúncio fixo na lateral direita -->
+    <div id="ads-container" class="ads-container">
+      <ins class="adsbygoogle"
+           style="display:block; width: 300px; height: 600px; border: 1px solid #ddd;"
+           data-ad-client="ca-pub-xxxxxxxxxxxxxxxx"  <!-- Substitua pelo seu ID -->
+           data-ad-slot="1234567890"  <!-- Substitua pelo seu slot de anúncio -->
+           data-ad-format="vertical"
+           data-full-width-responsive="true"></ins>
+    </div>
+
+    <script>
+      (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+
+    <input type="text" id="searchInput" placeholder="🔍 Buscar calculadora..." onkeyup="filtrarCalculadoras()">
+
+    <div class="card-grid" id="cardGrid">
+      <div class="card">
+        <div>🏠</div>
+        <a href="calculadoras/financiamento.html">Financiamento</a>
+      </div>
+      <div class="card">
+        <div>📈</div>
+        <a href="calculadoras/juros-compostos.html">Juros Compostos</a>
+      </div>
+      <div class="card">
+        <div>💼</div>
+        <a href="#">Rescisão CLT</a>
+      </div>
+      <div class="card">
+        <div>🌐</div>
+        <a href="calculadoras/subrede.html">Máscara de Sub-rede</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cookie Banner -->
+  <div id="cookie-banner" style="display: none;">
+    <div style="
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: linear-gradient(90deg, #1f3a93, #3a539b);
+      color: #fff;
+      padding: 15px 20px;
+      text-align: center;
+      z-index: 1000;
+      font-size: 15px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    ">
+      Este site utiliza cookies para melhorar sua experiência.
+      <button id="accept-cookies" style="
+        margin-left: 15px;
+        padding: 10px 16px;
+        background-color: #00c853;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      ">Aceitar</button>
+    </div>
+  </div>
+
+  <script>
+    // Funções de cookies
+    function setCookie(name, value, days) {
+      const expires = new Date(Date.now() + days * 864e5).toUTCString();
+      document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/';
+    }
+
+    function getCookie(name) {
+      return document.cookie.split('; ').find(row => row.startsWith(name + '='))?.split('=')[1];
+    }
+
+    // Exibir o banner de cookies se o usuário ainda não aceitou
+    if (!getCookie('cookies_aceitos')) {
+      document.getElementById('cookie-banner').style.display = 'block';
+    }
+
+    // Ao clicar em "Aceitar"
+    document.getElementById('accept-cookies').addEventListener('click', () => {
+      setCookie('cookies_aceitos', 'sim', 365);
+      document.getElementById('cookie-banner').style.display = 'none';
+    });
+  </script>
+
+  <script>
+    // Função para carregar o script do Google AdSense
+    function carregarAdsense() {
+      const script = document.createElement('script');
+      script.setAttribute('data-ad-client', 'ca-pub-xxxxxxxxxxxxxxxx');  <!-- Substitua pelo seu ID -->
+      script.async = true;
+      script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+      document.head.appendChild(script);
+    }
+
+    // Se o cookie foi aceito, carrega o AdSense
+    if (getCookie('cookies_aceitos') === 'sim') {
+      carregarAdsense();
+    }
+
+    // Quando o usuário clicar em "Aceitar", carrega o AdSense também
+    document.getElementById('accept-cookies').addEventListener('click', () => {
+      setCookie('cookies_aceitos', 'sim', 365);
+      document.getElementById('cookie-banner').style.display = 'none';
+      carregarAdsense(); // Carrega os anúncios aqui
+    });
+  </script>
+</body>
+</html>
