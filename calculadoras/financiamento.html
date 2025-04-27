@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Calculadora de Financiamento</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="../componentes/financiamento.js" defer></script>
+</head>
+<body>
+  <h1>Financiamento (Sistema Price)</h1>
+  <form id="form-financiamento">
+    <label>Valor financiado (R$): <input type="number" id="valor" required></label><br>
+    <label>Taxa de juros mensal (%): <input type="number" id="taxa" required></label><br>
+    <label>Prazo (meses): <input type="number" id="prazo" required></label><br>
+    <button type="submit">Calcular</button>
+  </form>
+  <div id="resultado"></div>
+</body>
+</html>

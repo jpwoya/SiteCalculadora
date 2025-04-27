@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora de Sub-rede</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white shadow-xl rounded-2xl p-6 max-w-xl w-full">
+    <h1 class="text-2xl font-bold mb-4 text-center">Calculadora de Sub-rede</h1>
+    <div class="mb-4">
+      <label for="ip" class="block text-sm font-medium text-gray-700">Endereço IP (ex: 192.168.1.1)</label>
+      <input type="text" id="ip" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="192.168.1.1" />
+    </div>
+    <div class="mb-4">
+      <label for="mask" class="block text-sm font-medium text-gray-700">Máscara (CIDR - ex: 24)</label>
+      <input type="number" id="mask" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2" placeholder="24" />
+    </div>
+    <button onclick="calculate()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md font-semibold transition duration-200">
+      Calcular
+    </button>
+
+    <div id="results" class="mt-6 hidden">
+      <h2 class="text-xl font-semibold mb-4">Resultado:</h2>
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded-xl shadow">
+          <tbody class="divide-y divide-gray-200" id="results-body">
+            <!-- Resultados aparecerão aqui -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function calculate() {
+      const ip = document.getElementById("ip").value;
+      const mask = parseInt(document.getElementById("mask").value);
+      const resultsDiv = document.getElementById("results");
+      const resultsBody = document.getElementById("results-body");
+
+      if (!ip || isNaN(mask) || mask < 0 || mask > 32) {
+        alert("Por favor, insira um IP válido e uma máscara entre 0 e 32.");
+        return;
+      }
+
+      const ipParts = ip.split('.').map(Number);
+      if (ipParts.length !== 4 || ipParts.some(p => isNaN(p) || p < 0 || p > 255)) {
+        alert("Endereço IP inválido.");
+        return;
+      }
+
+      const ipInt = ipParts.reduce((acc, octet) => (acc << 8) + octet, 0);
+      const maskInt = 0xFFFFFFFF << (32 - mask) >>> 0;
+      const networkInt = ipInt & maskInt;
+      const broadcastInt = networkInt | (~maskInt >>> 0);
+
+      const networkAddress = intToIp(networkInt);
+      const broadcastAddress = intToIp(broadcastInt);
+      const minHost = mask === 32 ? "-" : intToIp(networkInt + 1);
+      const maxHost = mask === 32 ? "-" : intToIp(broadcastInt - 1);
+      const validHosts = mask >= 31 ? 0 : (broadcastInt - networkInt - 1);
+
+      const ipClass = getIpClass(ipParts[0]);
+
+      const resultData = [
+        ["Endereço IP", ip],
+        ["Máscara de Sub-rede", mask],
+        ["Endereço de Rede", networkAddress],
+        ["Broadcast", broadcastAddress],
+        ["Host Mínimo", minHost],
+        ["Host Máximo", maxHost],
+        ["Quantidade de Hosts Válidos", validHosts],
+        ["Tipo de IP", ipClass]
+      ];
+
+      let resultHTML = "";
+      resultData.forEach(([label, value]) => {
+        resultHTML += `
+          <tr>
+            <td class="py-2 px-4 font-medium text-gray-700 bg-gray-50">${label}</td>
+            <td class="py-2 px-4 text-gray-900">${value}</td>
+          </tr>
+        `;
+      });
+
+      resultsBody.innerHTML = resultHTML;
+      resultsDiv.classList.remove("hidden");
+    }
+
+    function intToIp(int) {
+      return [(int >>> 24), (int >>> 16 & 255), (int >>> 8 & 255), (int & 255)].join('.');
+    }
+
+    function getIpClass(firstOctet) {
+      if (firstOctet >= 1 && firstOctet <= 126) return "Classe A";
+      if (firstOctet >= 128 && firstOctet <= 191) return "Classe B";
+      if (firstOctet >= 192 && firstOctet <= 223) return "Classe C";
+      if (firstOctet >= 224 && firstOctet <= 239) return "Multicast (Classe D)";
+      if (firstOctet >= 240 && firstOctet <= 255) return "Reservado (Classe E)";
+      return "Desconhecido";
+    }
+  </script>
+</body>
+</html>

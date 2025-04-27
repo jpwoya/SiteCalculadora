@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portal de Calculadoras</title>
+  <link rel="stylesheet" href="css/style.css">
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(120deg, #f0f4f8, #d9e2ec);
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #1f3a93;
+    }
+
+    p {
+      text-align: center;
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+
+    #searchInput {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      margin-bottom: 20px;
+      box-sizing: border-box;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+    }
+
+    .card a {
+      text-decoration: none;
+      color: #1f3a93;
+      font-size: 18px;
+      font-weight: 600;
+      display: block;
+      margin-top: 10px;
+    }
+
+    /* Estilo para o anúncio fixo */
+    .ads-container {
+      position: fixed;
+      top: 120px;
+      right: 10px;
+      width: 300px;
+      height: 600px;
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      z-index: 9999;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .ads-container ins {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧮 Portal de Calculadoras</h1>
+    <p>Escolha ou busque a calculadora que você precisa:</p>
+
+    <input type="text" id="searchInput" placeholder="🔍 Buscar calculadora..." onkeyup="filtrarCalculadoras()">
+
+    <div class="card-grid" id="cardGrid">
+      <div class="card">
+        <div>🏠</div>
+        <a href="calculadoras/financiamento.html">Financiamento</a>
+      </div>
+      <div class="card">
+        <div>📈</div>
+        <a href="calculadoras/juros-compostos.html">Juros Compostos</a>
+      </div>
+      <div class="card">
+        <div>💼</div>
+        <a href="#">Rescisão CLT</a>
+      </div>
+      <div class="card">
+        <div>🌐</div>
+        <a href="calculadoras/subrede.html">Máscara de Sub-rede</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Anúncio fixo -->
+  <div class="ads-container">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-xxxxxxxxxxxxxxxx"  <!-- Substitua pelo seu ID -->
+         data-ad-slot="1234567890"                 <!-- Substitua pelo seu Slot -->
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+  </div>
+
+  <!-- Banner de Cookies -->
+  <div id="cookie-banner" style="display: none;">
+    <div style="
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: linear-gradient(90deg, #1f3a93, #3a539b);
+      color: #fff;
+      padding: 15px 20px;
+      text-align: center;
+      z-index: 1000;
+      font-size: 15px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    ">
+      Este site utiliza cookies para melhorar sua experiência.
+      <button id="accept-cookies" style="
+        margin-left: 15px;
+        padding: 10px 16px;
+        background-color: #00c853;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+      ">Aceitar</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    function setCookie(name, value, days) {
+      const expires = new Date(Date.now() + days * 864e5).toUTCString();
+      document.cookie = name + '=' + encodeURIComponent(value) + '; expires=' + expires + '; path=/';
+    }
+
+    function getCookie(name) {
+      return document.cookie.split('; ').find(row => row.startsWith(name + '='))?.split('=')[1];
+    }
+
+    if (!getCookie('cookies_aceitos')) {
+      document.getElementById('cookie-banner').style.display = 'block';
+    }
+
+    document.getElementById('accept-cookies').addEventListener('click', () => {
+      setCookie('cookies_aceitos', 'sim', 365);
+      document.getElementById('cookie-banner').style.display = 'none';
+      carregarAdsense();
+    });
+
+    function carregarAdsense() {
+      const script = document.createElement('script');
+      script.setAttribute('data-ad-client', 'ca-pub-xxxxxxxxxxxxxxxx');  // Substitua pelo seu ID
+      script.async = true;
+      script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js';
+      document.head.appendChild(script);
+
+      // Aguarda carregar e exibe
+      script.onload = () => {
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      };
+    }
+
+    if (getCookie('cookies_aceitos') === 'sim') {
+      carregarAdsense();
+    }
+
+function removerAcentos(str) {
+  return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");  // Remove os acentos
+}
+
+function filtrarCalculadoras() {
+  const input = document.getElementById("searchInput").value.toLowerCase();  // Obtém a entrada e converte para minúsculo
+  const inputSemAcentos = removerAcentos(input);  // Remove acentos da entrada de busca
+  const cards = document.querySelectorAll(".card");  // Seleciona todos os cards
+
+  // Itera sobre todos os cards e verifica se o texto do card contém o texto da busca
+  cards.forEach(card => {
+    const texto = card.innerText.toLowerCase();  // Converte o texto do card para minúsculo
+    const textoSemAcentos = removerAcentos(texto);  // Remove acentos do texto do card
+    card.style.display = textoSemAcentos.includes(inputSemAcentos) ? "block" : "none";  // Exibe ou esconde o card
+  });
+}
+
+
+  </script>
+</body>
+</html>
